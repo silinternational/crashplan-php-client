@@ -14,7 +14,7 @@ via parameters ```apiuser``` and ```apipass```.
 
 # Install #
 Installation is simple with [Composer](https://getcomposer.org/). 
-Add ```"silinternational/crashplan-php-client", "dev-master"``` to your ```composer.json``` file and update.
+Add ```"silinternational/crashplan-php-client": "dev-master"``` to your ```composer.json``` file and update.
 
 # Usage #
 Example:
