@@ -97,12 +97,12 @@ class Client extends GuzzleClient
         // Ensure that the credentials have been provided.
         if (!isset($config['apiuser'])) {
             throw new \InvalidArgumentException(
-                'You must provide a apiuser.'
+                'You must provide an apiuser.'
             );
         }
         if (!isset($config['apipass'])) {
             throw new \InvalidArgumentException(
-                'You must provide a apipass.'
+                'You must provide an apipass.'
             );
         }
 
