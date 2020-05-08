@@ -4,7 +4,6 @@ namespace Crashplan;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Subscriber\Retry\RetrySubscriber;
 
 /**
  * Partial Crashplan API client implemented with Guzzle.
@@ -59,15 +58,6 @@ class Client extends GuzzleClient
             ? $config['http_client_options']
             : [];
         $client = new HttpClient($clientOptions);
-
-        // Attach request retry logic.
-        $client->getEmitter()->attach(new RetrySubscriber([
-            'max' => $config['max_retries'],
-            'filter' => RetrySubscriber::createChainFilter([
-                RetrySubscriber::createStatusFilter(),
-                RetrySubscriber::createCurlFilter(),
-            ]),
-        ]));
 
         return $client;
     }
