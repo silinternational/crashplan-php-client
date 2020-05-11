@@ -29,20 +29,25 @@ class Client extends GuzzleClient
             'description_path' => __DIR__ . '/crashplan-api.php',
         ];
 
+        // Ensure that the credentials are set.
+        $config = $this->applyCredentials($config);
+
         // Create the Crashplan client.
         parent::__construct(
             $this->getHttpClientFromConfig($config),
             $this->getDescriptionFromConfig($config),
+            null,
+            null,
+            null,
             $config
         );
 
-        // Ensure that the credentials are set.
-        $this->applyCredentials($config);
-
         // Ensure that ApiVersion is set.
         $this->setConfig(
-            'defaults/ApiVersion',
-            $this->getDescription()->getApiVersion()
+            'defaults',
+            [
+                'ApiVersion' => $this->getDescription()->getApiVersion()
+            ]
         );
     }
 
@@ -97,8 +102,11 @@ class Client extends GuzzleClient
         }
 
         // Set credentials for authentication based on Crashplan's requirements.
-        $this->getHttpClient()->setDefaultOption('auth', [
+        $config['auth'] = [
             $config['apiuser'], $config['apipass']
-        ]);
+        ];
+
+        // Return new config array with credentials for authentication based on Jira's requirements.
+        return $config;
     }
 }
