@@ -68,7 +68,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $client = $this->getMockClient($mockBody, 200);
+        $client = $this->getMockClient($mockBody);
 
         // Call list users and make sure we get back the user we expect from mock
         $users = $client->listUsers(['email' => 'multiple_results@domain.org']);
@@ -109,7 +109,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $client = $this->getMockClient($mockBody, 200);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->getUser(['userId' => 123]);
@@ -148,7 +148,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $client = $this->getMockClient($mockBody, 200);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->addUser(
@@ -196,7 +196,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $client = $this->getMockClient($mockBody, 200);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->updateUser(
@@ -232,11 +232,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @param $mockBody
-     * @return Client
-     */
-    private function getMockClient($mockBody, $responseCode)
+    private function getMockClient(string $mockBody, int $responseCode = 200) : Client
     {
         $config = include 'config-test.php';
 
