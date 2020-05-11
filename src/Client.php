@@ -25,7 +25,6 @@ class Client extends GuzzleClient
     {
         // Apply some defaults.
         $config += [
-            'max_retries'      => 3,
             'description_path' => __DIR__ . '/crashplan-api.php',
         ];
 
