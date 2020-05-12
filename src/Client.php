@@ -4,7 +4,6 @@ namespace Crashplan;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Subscriber\Retry\RetrySubscriber;
 
 /**
  * Partial Crashplan API client implemented with Guzzle.
@@ -26,24 +25,28 @@ class Client extends GuzzleClient
     {
         // Apply some defaults.
         $config += [
-            'max_retries'      => 3,
             'description_path' => __DIR__ . '/crashplan-api.php',
         ];
+
+        // Ensure that the credentials are set.
+        $config = $this->applyCredentials($config);
 
         // Create the Crashplan client.
         parent::__construct(
             $this->getHttpClientFromConfig($config),
             $this->getDescriptionFromConfig($config),
+            null,
+            null,
+            null,
             $config
         );
 
-        // Ensure that the credentials are set.
-        $this->applyCredentials($config);
-
         // Ensure that ApiVersion is set.
         $this->setConfig(
-            'defaults/ApiVersion',
-            $this->getDescription()->getApiVersion()
+            'defaults',
+            [
+                'ApiVersion' => $this->getDescription()->getApiVersion()
+            ]
         );
     }
 
@@ -59,15 +62,6 @@ class Client extends GuzzleClient
             ? $config['http_client_options']
             : [];
         $client = new HttpClient($clientOptions);
-
-        // Attach request retry logic.
-        $client->getEmitter()->attach(new RetrySubscriber([
-            'max' => $config['max_retries'],
-            'filter' => RetrySubscriber::createChainFilter([
-                RetrySubscriber::createStatusFilter(),
-                RetrySubscriber::createCurlFilter(),
-            ]),
-        ]));
 
         return $client;
     }
@@ -107,8 +101,11 @@ class Client extends GuzzleClient
         }
 
         // Set credentials for authentication based on Crashplan's requirements.
-        $this->getHttpClient()->setDefaultOption('auth', [
+        $config['auth'] = [
             $config['apiuser'], $config['apipass']
-        ]);
+        ];
+
+        // Return new config array with credentials for authentication based on Jira's requirements.
+        return $config;
     }
 }
