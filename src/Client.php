@@ -100,10 +100,11 @@ class Client extends GuzzleClient
             );
         }
 
-        // Set credentials for authentication based on Crashplan's requirements.
-        $config['auth'] = [
-            $config['apiuser'], $config['apipass']
-        ];
+        $authParams = ['auth' => [$config['apiuser'], $config['apipass'], 'basic']];
+
+        $config['http_client_options'] = isset($config['http_client_options'])
+            ? array_merge_recursive($config['http_client_options'], $authParams)
+            : $authParams;
 
         // Return new config array with credentials for authentication based on Jira's requirements.
         return $config;
